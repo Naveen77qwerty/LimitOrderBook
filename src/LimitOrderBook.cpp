@@ -316,8 +316,7 @@ public:
   }
 };
 
-int main()
-{
+int main() {
   LimitOrderBook lob;
 
   lob.addOrder(100.5, 50, true);
@@ -330,8 +329,8 @@ int main()
 
   lob.displayBook(3);
 
-  cout << "Best Bid: " << lob.getBestBid() << endl;
-  cout << "Best Ask: " << lob.getBestAsk() << endl;
+  cout << "Best Bid: " << lob.getBestBid() << "\n";
+  cout << "Best Ask: " << lob.getBestAsk() << "\n";
 
   cout << "\n--- Matching Orders ---\n";
 
