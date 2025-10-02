@@ -32,7 +32,7 @@ private:
 
     y->parent = x->parent;
 
-    if (x->parent == nullptr) {
+    if (x->parent == NIL) {
       root = y;
     } else if (x == x->parent->left) {
       x->parent->left = y;
@@ -55,7 +55,7 @@ private:
 
     y->parent = x->parent;
 
-    if (x->parent == nullptr) {
+    if (x->parent == NIL) {
       root = y;
     } else if (x == x->parent->right) {
       x->parent->right = y;
@@ -115,7 +115,7 @@ public:
   RedBlackTree() {
     NIL = new Node(0, 0);
     NIL->color = "BLACK";
-    NIL->left = NIL->right = NIL;
+    NIL->left = NIL->right = NIL->parent = NIL;
     root = NIL;
   }
 
@@ -125,7 +125,7 @@ public:
     newNode->left = NIL;
     newNode->right = NIL;
 
-    Node *parent = nullptr;
+    Node *parent = NIL;
     Node *current = root;
 
     while (current != NIL) {
@@ -144,20 +144,21 @@ public:
 
     newNode->parent = parent;
 
-    if (parent == nullptr) {
+    if (parent == NIL) {
       root = newNode;
+      newNode->parent = NIL;
     } else if (newNode->price < parent->price) {
       parent->left = newNode;
     } else {
       parent->right = newNode;
     }
 
-    if (newNode->parent == nullptr) {
+    if (newNode->parent == NIL) {
       newNode->color = "BLACK";
       return;
     }
 
-    if (newNode->parent->parent == nullptr) {
+    if (newNode->parent->parent == NIL) {
       return;
     }
 
@@ -245,6 +246,8 @@ public:
 
     return p;
   }
+
+  Node *getNil() { return NIL; }
 };
 
 class LimitOrderBook {
@@ -264,20 +267,21 @@ public:
   double getBestBid() {
     Node *n = bids.maximum();
 
-    return (n == nullptr || n->price == 0) ? -1 : n->price;
+    return (n == bids.getNil()) ? -1 : n->price;
   }
 
   double getBestAsk() {
     Node *n = asks.minimum();
 
-    return (n == nullptr || n->price == 0) ? -1 : n->price;
+    return (n == asks.getNil()) ? -1 : n->price;
   }
 
   void matchOrders() {
     Node *bestBid = bids.maximum();
     Node *bestAsk = asks.minimum();
 
-    while (bestBid && bestAsk && bestBid->price >= bestAsk->price) {
+    while (bestBid != bids.getNil() && bestAsk != asks.getNil() &&
+           bestBid->price >= bestAsk->price) {
       int tradedQty = min(bestBid->quantity, bestAsk->quantity);
 
       cout << "TRADE: " << tradedQty << " @ " << bestAsk->price << "\n";
@@ -300,7 +304,7 @@ public:
 
     Node *b = bids.maximum();
 
-    for (int i = 0; b && i < depth; i++) {
+    for (int i = 0; b != bids.getNil() && i < depth; i++) {
       cout << b->price << " : " << b->quantity << "\n";
       b = bids.predecessor(b);
     }
@@ -309,7 +313,7 @@ public:
 
     Node *a = asks.minimum();
 
-    for (int i = 0; a && i < depth; i++) {
+    for (int i = 0; a != asks.getNil() && i < depth; i++) {
       cout << a->price << " : " << a->quantity << "\n";
       a = asks.successor(a);
     }
