@@ -209,25 +209,6 @@ public:
     return temp;
   }
 
-  Node *predecessor(Node *x) {
-    if (x == NIL) {
-      return NIL;
-    }
-
-    if (x->left != NIL) {
-      return maximum(x->left);
-    }
-
-    Node *p = x->parent;
-
-    while (p != NIL && x == p->left) {
-      x = p;
-      p = p->parent;
-    }
-
-    return p;
-  }
-
   Node *successor(Node *x) {
     if (x == NIL) {
       return NIL;
@@ -240,6 +221,25 @@ public:
     Node *p = x->parent;
 
     while (p != NIL && x == p->right) {
+      x = p;
+      p = p->parent;
+    }
+
+    return p;
+  }
+
+  Node *predecessor(Node *x) {
+    if (x == NIL) {
+      return NIL;
+    }
+
+    if (x->left != NIL) {
+      return maximum(x->left);
+    }
+
+    Node *p = x->parent;
+
+    while (p != NIL && x == p->left) {
       x = p;
       p = p->parent;
     }
